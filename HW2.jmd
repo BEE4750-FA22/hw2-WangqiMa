@@ -18,7 +18,29 @@ Pkg.instantiate()
 
 # Problem 1
 ```julia
-function dissolved_oxygen_concerntrations(CBOD, NBOD)
+function dissolved_oxygen_concerntrations(x,CBODi, NBODi)
+    if x <= 15
+        U = 110000000/6
+        B0 = (CBODi*10+50)/11
+        N0 = (NBODi*10+35)/11
+        a1 = exp(-0.55*x/U)
+        a2 = (0.35/0.2)*(exp(-0.35*x/U)-a1)
+        a3 = (0.25/0.3)*(exp(-0.25*x/U)-a1)
+        C = 10*(1-a1)+(80/11)*a1-B0*a2-N0*a3
+        B = B0 * exp(-0.35*x/U)
+        N = N0 * exp(-0.25*x/U)
+    else
+        U = 125000000/6
+        B0 = (9.091*110+675)/125
+        N0 = (7.727*110+525)/125
+        a1 = exp(-0.55*x/U)
+        a2 = (0.35/0.2)*(exp(-0.35*x/U)-a1)
+        a3 = (0.25/0.3)*(exp(-0.25*x/U)-a1)
+        C = 10*(1-a1)+((7.273*110+75)/125)*a1-B0*a2-N0*a3
+    return C
+    end
+end
+using Plots
 
 ```
 ## Problem 1.1
