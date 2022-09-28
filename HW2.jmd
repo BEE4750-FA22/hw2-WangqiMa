@@ -17,10 +17,12 @@ Pkg.instantiate()
 ```
 
 # Problem 1
+
+## Problem 1.1
 ```julia
 function dissolved_oxygen_concerntrations(x,CBODi, NBODi)
     if x <= 15
-        U = 110000000/6
+        U = 6
         B0 = (CBODi*10+50)/11
         N0 = (NBODi*10+35)/11
         a1 = exp(-0.55*x/U)
@@ -30,25 +32,45 @@ function dissolved_oxygen_concerntrations(x,CBODi, NBODi)
         B = B0 * exp(-0.35*x/U)
         N = N0 * exp(-0.25*x/U)
     else
-        U = 125000000/6
-        B0 = (9.091*110+675)/125
-        N0 = (7.727*110+525)/125
-        a1 = exp(-0.55*x/U)
-        a2 = (0.35/0.2)*(exp(-0.35*x/U)-a1)
-        a3 = (0.25/0.3)*(exp(-0.25*x/U)-a1)
-        C = 10*(1-a1)+((7.273*110+75)/125)*a1-B0*a2-N0*a3
+        U = 6
+        B0 = (3.790*110+675)/125
+        N0 = (4.136*110+525)/125
+        a1 = exp(-0.55*(x-15)/U)
+        a2 = (0.35/0.2)*(exp(-0.35*(x-15)/U)-a1)
+        a3 = (0.25/0.3)*(exp(-0.25*(x-15)/U)-a1)
+        C = 10*(1-a1)+((4.882*110+75)/125)*a1-B0*a2-N0*a3
     return C
     end
 end
 using Plots
+x=range(1,50)
+y=dissolved_oxygen_concerntrations.(x,5,5)
+plot(x,y)
+```
+## Problem 1.2
+```julia
+for i in range(15,50)
+    if dissolved_oxygen_concerntrations(i,5,5) > 6
+        return i-15
+    end
+end
 
 ```
-## Problem 1.1
-
-## Problem 1.2
-
 ## Problem 1.3
-
+```julia
+function treated_waste_2(x,p)
+    U = 6
+    B0 = (3.790*110+675*p/100)/125
+    N0 = (4.136*110+525)/125
+    a1 = exp(-0.55*(x-15)/U)
+    a2 = (0.35/0.2)*(exp(-0.35*(x-15)/U)-a1)
+    a3 = (0.25/0.3)*(exp(-0.25*(x-15)/U)-a1)
+    C = 10*(1-a1)+((4.882*110+75)/125)*a1-B0*a2-N0*a3
+end
+for x in range(15,50)
+    for p in range(0,100)
+        if treated_waste_2(x-1,p) > treated_waste_2(x,p) && treated_waste_2(x+1,p) > treated_waste_2(x,p) && treated_waste_2(x,p) > 4
+```
 ## Problem 1.4
 
 ## Problem 1.5
